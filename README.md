@@ -71,5 +71,3 @@ Frontend: `http://localhost:3000`
 
 **Backend:** Express.js, MongoDB, Mongoose, JWT, bcryptjs  
 **Frontend:** React 19, Vite, React Router, Axios, TailwindCSS
-
-View original AI Studio app: https://ai.studio/apps/drive/1ns-8wUx9tjbGHPs-1RGb-FCGaPL5VPql
