@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useMemo, useState } from '
 
 const translations = {
   en: {
-    appName: 'Kisan Profit',
+    appName: 'KhetBook',
     greeting: 'Namaste, {{name}}',
     farmerAccount: 'Farmer Account',
     logout: 'Logout',
@@ -179,7 +179,7 @@ const translations = {
     noHistoryFound: 'No crop history found'
   },
   hi: {
-    appName: 'किसान प्रॉफिट',
+    appName: 'खेतबुक',
     greeting: 'नमस्ते, {{name}}',
     farmerAccount: 'किसान खाता',
     logout: 'लॉगआउट',
@@ -356,7 +356,7 @@ const translations = {
     noHistoryFound: 'कोई फसल इतिहास नहीं मिला'
   },
   mr: {
-    appName: 'किसान प्रॉफिट',
+    appName: 'खेतबुक',
     greeting: 'नमस्कार, {{name}}',
     farmerAccount: 'शेतकरी खाते',
     logout: 'लॉगआउट',

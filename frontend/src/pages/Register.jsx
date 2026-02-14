@@ -133,7 +133,7 @@ const Register = ({ onLogin }) => {
       <div className="max-w-md w-full relative z-10">
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center mb-4">
-            <img src="/logo.png" alt="Kisan Profit" className="w-28 h-28 object-contain drop-shadow-lg" />
+            <img src="/logo.png" alt="KhetBook" className="w-28 h-28 object-contain drop-shadow-lg" />
           </div>
           <h2 className="text-3xl font-bold text-slate-800 font-outfit">{t('createAccount')}</h2>
           <p className="text-slate-500 font-medium">{t('joinFarmers')}</p>
