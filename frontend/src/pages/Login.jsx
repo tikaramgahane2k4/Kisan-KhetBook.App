@@ -51,11 +51,14 @@ const Login = ({ onLogin }) => {
 
         const buttonEl = document.getElementById('googleSignInBtn');
         if (buttonEl) {
+          // Use responsive width — smaller on mobile, larger on desktop
+          const btnWidth = Math.min(window.innerWidth - 80, 300);
           window.google.accounts.id.renderButton(buttonEl, {
             theme: 'outline',
             size: 'large',
             text: 'continue_with',
-            width: 320
+            shape: 'pill',
+            width: btnWidth
           });
         }
 
@@ -207,7 +210,7 @@ const Login = ({ onLogin }) => {
           </div>
 
           <div className="flex justify-center">
-            <div id="googleSignInBtn"></div>
+            <div id="googleSignInBtn" className="w-full flex justify-center [&>div]:max-w-full"></div>
           </div>
           
           <div className="mt-8 text-center">
