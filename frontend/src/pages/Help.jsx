@@ -22,7 +22,7 @@ const Help = () => {
         </svg>
       ),
       label: t('helpPhone'),
-      value: '+91 1800-XXX-XXXX',
+      value: '+91 7498623275',
       color: 'bg-emerald-50 text-emerald-600'
     },
     {
@@ -32,7 +32,7 @@ const Help = () => {
         </svg>
       ),
       label: t('helpEmail'),
-      value: 'support@agriexpense.in',
+      value: 'tikaram24@navgurukul.org',
       color: 'bg-blue-50 text-blue-600'
     },
     {

@@ -4,7 +4,8 @@ import {
   getCropById,
   createCrop,
   updateCrop,
-  deleteCrop
+  deleteCrop,
+  deleteAllCrops
 } from '../controllers/crop.controller.js';
 import { addSale } from '../controllers/crop.controller.js';
 import { protect } from '../middleware/auth.middleware.js';
@@ -15,7 +16,8 @@ router.use(protect);
 
 router.route('/')
   .get(getCrops)
-  .post(createCrop);
+  .post(createCrop)
+  .delete(deleteAllCrops);
 
 router.route('/:id')
   .get(getCropById)

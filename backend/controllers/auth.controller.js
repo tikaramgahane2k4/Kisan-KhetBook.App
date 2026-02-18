@@ -164,21 +164,18 @@ export const getMe = async (req, res) => {
 // @access  Private
 export const updateProfile = async (req, res) => {
   try {
-    const { name, mobile, city, state } = req.body;
-    
+    const { name, mobile, pincode, city, district, state } = req.body;
     const user = await User.findById(req.user.id);
-    
     if (!user) {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
-
     if (name) user.name = name;
     if (mobile !== undefined) user.mobile = mobile;
+    if (pincode !== undefined) user.pincode = pincode;
     if (city !== undefined) user.city = city;
+    if (district !== undefined) user.district = district;
     if (state !== undefined) user.state = state;
-
     await user.save();
-
     res.json({
       success: true,
       data: {
@@ -186,7 +183,9 @@ export const updateProfile = async (req, res) => {
         name: user.name,
         email: user.email,
         mobile: user.mobile,
+        pincode: user.pincode,
         city: user.city,
+        district: user.district,
         state: user.state
       }
     });

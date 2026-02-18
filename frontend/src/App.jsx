@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { authAPI } from './services/api';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -22,14 +23,42 @@ const App = () => {
     const saved = localStorage.getItem('agri_auth');
     return saved ? JSON.parse(saved) : { user: null, token: null, isAuthenticated: false };
   });
+
+  // Fetch latest profile from backend if authenticated
+  useEffect(() => {
+    const fetchProfile = async () => {
+      if (auth.isAuthenticated && auth.token) {
+        try {
+          const res = await authAPI.getMe();
+          if (res.success) {
+            setAuth(prev => ({ ...prev, user: res.data }));
+          }
+        } catch (e) {
+          // ignore
+        }
+      }
+    };
+    fetchProfile();
+    // Only run on mount and when authenticated
+    // eslint-disable-next-line
+  }, [auth.isAuthenticated]);
   const [showAddCropModal, setShowAddCropModal] = useState(false);
 
   useEffect(() => {
     localStorage.setItem('agri_auth', JSON.stringify(auth));
   }, [auth]);
 
-  const login = (user, token) => {
+  const login = async (user, token) => {
+    // Set token first, then fetch latest profile
     setAuth({ user, token, isAuthenticated: true });
+    try {
+      const res = await authAPI.getMe();
+      if (res.success) {
+        setAuth({ user: res.data, token, isAuthenticated: true });
+      }
+    } catch (e) {
+      // ignore
+    }
   };
 
   const logout = () => {
@@ -124,7 +153,10 @@ const App = () => {
               <Route path="*" element={<Navigate to="/" />} />
             </Routes>
           </main>
-            {auth.isAuthenticated && <MobileNav onAddCrop={() => setShowAddCropModal(true)} />}
+            {auth.isAuthenticated && <MobileNav onAddCrop={() => {
+              setShowAddCropModal(true);
+              window.location.hash = '#/';
+            }} />}
           </div>
         </HashRouter>
       </LanguageProvider>

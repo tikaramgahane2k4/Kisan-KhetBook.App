@@ -32,8 +32,8 @@ const Profile = ({ user, onUpdateUser, isOpen, onClose }) => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
+  // Always fetch latest profile on mount, on modal open, and after update
   useEffect(() => {
-    // For modal mode: fetch when opened. For page mode: fetch on mount.
     if (isModal && !isOpen) return;
     setIsEditing(false);
     setError('');
@@ -54,6 +54,7 @@ const Profile = ({ user, onUpdateUser, isOpen, onClose }) => {
           };
           setProfileData(data);
           setFormData(data);
+          if (onUpdateUser) onUpdateUser(response.data);
         }
       } catch (err) {
         setError('Failed to load profile');
@@ -62,7 +63,8 @@ const Profile = ({ user, onUpdateUser, isOpen, onClose }) => {
       }
     };
     fetchProfile();
-  }, [isModal ? isOpen : null]);
+    // eslint-disable-next-line
+  }, [isModal ? isOpen : null, success]);
 
   const handleEditClick = () => {
     setFormData({ ...profileData });
@@ -87,22 +89,26 @@ const Profile = ({ user, onUpdateUser, isOpen, onClose }) => {
         state: formData.state
       });
       if (response.success) {
-        const updatedData = {
-          name: response.data.name || formData.name,
-          email: response.data.email || profileData.email,
-          mobile: response.data.mobile || formData.mobile,
-          pincode: response.data.pincode || formData.pincode,
-          city: response.data.city || formData.city,
-          district: response.data.district || formData.district,
-          state: response.data.state || formData.state
-        };
-        setProfileData(updatedData);
-        setFormData(updatedData);
+        // Fetch latest profile from backend to ensure all fields are up to date
+        const latest = await authAPI.getMe();
+        if (latest.success) {
+          const data = {
+            name: latest.data.name || '',
+            email: latest.data.email || '',
+            mobile: latest.data.mobile || '',
+            pincode: latest.data.pincode || '',
+            city: latest.data.city || '',
+            district: latest.data.district || '',
+            state: latest.data.state || ''
+          };
+          setProfileData(data);
+          setFormData(data);
+          if (onUpdateUser) {
+            onUpdateUser(latest.data);
+          }
+        }
         setSuccess(t('profileUpdated'));
         setIsEditing(false);
-        if (onUpdateUser) {
-          onUpdateUser(response.data);
-        }
         setTimeout(() => setSuccess(''), 3000);
       } else {
         setError(response.message || 'Update failed');
@@ -126,9 +132,9 @@ const Profile = ({ user, onUpdateUser, isOpen, onClose }) => {
             const po = data[0].PostOffice[0];
             setFormData(f => ({
               ...f,
-              city: po.Block || po.Taluk || po.Name || '',
-              district: po.District || '',
-              state: po.State || ''
+              city: po.Block || po.Taluk || po.Name || f.city,
+              district: po.District || f.district,
+              state: po.State || f.state
             }));
           }
         } catch (e) {

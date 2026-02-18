@@ -92,7 +92,7 @@ const translations = {
     expenseType_threshing: 'Paddy Threshing',
     expenseType_fertilizer: 'Fertilizer',
     expenseType_seeds: 'Seeds',
-    expenseType_irrigation: 'Paani',
+    expenseType_waterpaani: 'Water / Paani',
     expenseType_other: 'Other',
     runningTime: 'Running Time',
     hours: 'Hours',

@@ -11,7 +11,7 @@ export const ExpenseType = {
   THRESHING: 'Paddy Threshing',
   FERTILIZER: 'Fertilizer',
   SEEDS: 'Seeds',
-  IRRIGATION: 'Paani',
+  IRRIGATION: 'Water / Paani',
   OTHER: 'Other'
 };
 
@@ -324,7 +324,7 @@ const CropDetails = () => {
       case ExpenseType.SEEDS:
         return t('expenseType_seeds');
       case ExpenseType.IRRIGATION:
-        return t('expenseType_irrigation');
+        return t('expenseType_waterpaani');
       case ExpenseType.OTHER:
         return t('expenseType_other');
       default:
@@ -394,11 +394,6 @@ const CropDetails = () => {
               <span className={`px-3 py-1 rounded-full text-sm font-bold ${isCompleted ? 'bg-slate-200 text-slate-700' : 'bg-emerald-100 text-emerald-700'}`}>
                 {crop.status}
               </span>
-              {isCompleted && (
-                <span className={`ml-3 px-3 py-1 rounded-full text-xs font-bold ${profit >= 0 ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}`}>
-                  {profit >= 0 ? `Profit: ₹${profit.toLocaleString()}` : `Loss: ₹${Math.abs(profit).toLocaleString()}`}
-                </span>
-              )}
             </div>
             <p className="text-slate-500 font-medium">{t('startedOn', { date: new Date(crop.startDate).toLocaleDateString() })} • {crop.landArea} {crop.unit}</p>
           </div>
@@ -791,6 +786,55 @@ const CropDetails = () => {
                       })()}</div>
                     </>
                   )}
+                  {expenseData.type === ExpenseType.IRRIGATION && (
+                    <>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-bold text-slate-700 mb-1">{t('dateLabel')}</label>
+                          <input type="date" required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all" value={expenseData.date} onChange={e => setExpenseData({...expenseData, date: e.target.value})} />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-bold text-slate-700 mb-1">{t('ownerOperator')}</label>
+                          <input type="text" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.machineOwner} onChange={e => setExpenseData({...expenseData, machineOwner: e.target.value})} />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-bold text-slate-700 mb-1">{t('runningTime')}</label>
+                          <div className="flex gap-2">
+                            <input type="number" min={0} className="w-1/2 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" placeholder={t('hours')} value={expenseData.runningHours} onChange={e => setExpenseData({...expenseData, runningHours: e.target.value})} />
+                            <input type="number" min={0} max={59} className="w-1/2 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" placeholder={t('minutes')} value={expenseData.runningMinutes} onChange={e => setExpenseData({...expenseData, runningMinutes: e.target.value})} />
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-bold text-slate-700 mb-1">{t('chargePerHour')}</label>
+                          <input type="number" min={0} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.chargePerUnit} onChange={e => setExpenseData({...expenseData, chargePerUnit: e.target.value})} />
+                        </div>
+                      </div>
+                      <div className="mt-2 text-right font-bold text-emerald-700">{t('totalLabel')}: ₹{(() => {
+                        let hours = parseFloat(expenseData.runningHours) || 0;
+                        let minutes = parseFloat(expenseData.runningMinutes) || 0;
+                        let time = hours + (minutes / 60);
+                        let charge = parseFloat(expenseData.chargePerUnit) || 0;
+                        let total = time * charge;
+                        return isNaN(total) ? 0 : total.toFixed(2);
+                      })()}</div>
+                      <div className="mt-4 grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-bold text-slate-700 mb-1">{t('notesOptionalLabel')}</label>
+                          <input type="text" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.notes} onChange={e => setExpenseData({...expenseData, notes: e.target.value})} />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-bold text-slate-700 mb-1">{t('paymentMode')}</label>
+                          <select className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.paymentMode} onChange={e => setExpenseData({...expenseData, paymentMode: e.target.value})}>
+                            <option value="">Select</option>
+                            <option value="cash">Cash</option>
+                            <option value="upi">UPI</option>
+                            <option value="bank">Bank Transfer</option>
+                            <option value="other">Other</option>
+                          </select>
+                        </div>
+                      </div>
+                    </>
+                  )}
                   {expenseData.type === ExpenseType.LABOUR && (
                     <>
                       <div className="grid grid-cols-2 gap-4">
@@ -881,7 +925,7 @@ const CropDetails = () => {
                       })()}</div>
                     </>
                   )}
-                  {[ExpenseType.FERTILIZER, ExpenseType.SEEDS, ExpenseType.IRRIGATION, ExpenseType.OTHER].includes(expenseData.type) && (
+                  {([ExpenseType.FERTILIZER, ExpenseType.SEEDS, ExpenseType.OTHER].includes(expenseData.type)) && (
                     <>
                       <div className="grid grid-cols-2 gap-4">
                         <div>

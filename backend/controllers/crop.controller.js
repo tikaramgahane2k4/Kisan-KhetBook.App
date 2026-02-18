@@ -1,3 +1,14 @@
+// @desc    Delete all crops for a user
+// @route   DELETE /api/crops
+// @access  Private
+export const deleteAllCrops = async (req, res) => {
+  try {
+    await Crop.deleteMany({ userId: req.user.id });
+    res.json({ success: true, message: 'All crops deleted' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
 import Crop from '../models/Crop.model.js';
 
 // @desc    Get all crops for a user
