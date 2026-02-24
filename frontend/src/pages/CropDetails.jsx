@@ -399,7 +399,7 @@ const CropDetails = () => {
           </div>
           <div className="flex space-x-3 w-full md:w-auto">
             {isCompleted && (
-              <button 
+              <button
                 onClick={handlePrint}
                 className="flex-1 md:flex-none bg-white border-2 border-slate-200 text-slate-700 px-6 py-2.5 rounded-xl font-bold hover:bg-slate-50 transition-all flex items-center justify-center space-x-2"
               >
@@ -409,7 +409,7 @@ const CropDetails = () => {
                 <span>{t('downloadPdf')}</span>
               </button>
             )}
-            <button 
+            <button
               onClick={toggleStatus}
               className={`flex-1 md:flex-none px-6 py-2.5 rounded-xl font-bold transition-all ${isCompleted ? 'bg-emerald-600 text-white hover:bg-emerald-700' : 'bg-slate-800 text-white hover:bg-slate-900'}`}
             >
@@ -472,7 +472,7 @@ const CropDetails = () => {
           <div className="flex justify-between items-center">
             <h2 className="text-2xl font-bold text-slate-800 font-outfit">{t('expenseLogs')}</h2>
             {!isCompleted && (
-              <button 
+              <button
                 onClick={() => setShowExpenseModal(true)}
                 className="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded-xl font-bold text-sm shadow-md transition-all flex items-center space-x-2"
               >
@@ -554,7 +554,7 @@ const CropDetails = () => {
                       </td>
                     </tr>
                   ) : (
-                    filteredExpenses.sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map(exp => (
+                    filteredExpenses.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map(exp => (
                       <tr key={exp._id || exp.id} className="hover:bg-slate-50 transition-colors">
                         <td className="px-6 py-4">
                           <div className="flex items-center space-x-3">
@@ -612,113 +612,113 @@ const CropDetails = () => {
       {/* Print View Only */}
       <div className="print-only p-8 bg-white print-page">
         <div className="print-scale">
-        <div className="flex justify-between items-start border-b-4 border-emerald-600 pb-6 mb-6">
-          <div>
-            <h1 className="text-4xl font-bold text-slate-900 font-outfit">{t('cropExpenseReport')}</h1>
-            <p className="text-slate-600 text-lg">{t('reportSubTitle')}</p>
-            {(farmer.name || farmer.email) && (
-              <p className="text-slate-600 text-sm mt-1">
-                Farmer: {farmer.name || '-'}{farmer.email ? ` • ${farmer.email}` : ''}
-              </p>
-            )}
+          <div className="flex justify-between items-start border-b-4 border-emerald-600 pb-6 mb-6">
+            <div>
+              <h1 className="text-4xl font-bold text-slate-900 font-outfit">{t('cropExpenseReport')}</h1>
+              <p className="text-slate-600 text-lg">{t('reportSubTitle')}</p>
+              {(farmer.name || farmer.email) && (
+                <p className="text-slate-600 text-sm mt-1">
+                  Farmer: {farmer.name || '-'}{farmer.email ? ` • ${farmer.email}` : ''}
+                </p>
+              )}
+            </div>
+            <div className="text-right">
+              <p className="font-bold text-slate-800 text-xl">{crop.name}</p>
+              <p className="text-slate-500">{t('statusLabel')}: {crop.status}</p>
+              <p className="text-slate-500">{t('generatedOn')}: {new Date().toLocaleDateString()}</p>
+            </div>
           </div>
-          <div className="text-right">
-            <p className="font-bold text-slate-800 text-xl">{crop.name}</p>
-            <p className="text-slate-500">{t('statusLabel')}: {crop.status}</p>
-            <p className="text-slate-500">{t('generatedOn')}: {new Date().toLocaleDateString()}</p>
-          </div>
-        </div>
 
-        <div className="grid grid-cols-3 gap-4 mb-6">
-          <div className="border border-slate-200 p-4 rounded-xl">
-            <p className="text-xs uppercase font-bold text-slate-400 mb-1">{t('startDate')}</p>
-            <p className="font-bold text-slate-800">{new Date(crop.startDate).toLocaleDateString()}</p>
+          <div className="grid grid-cols-3 gap-4 mb-6">
+            <div className="border border-slate-200 p-4 rounded-xl">
+              <p className="text-xs uppercase font-bold text-slate-400 mb-1">{t('startDate')}</p>
+              <p className="font-bold text-slate-800">{new Date(crop.startDate).toLocaleDateString()}</p>
+            </div>
+            <div className="border border-slate-200 p-4 rounded-xl">
+              <p className="text-xs uppercase font-bold text-slate-400 mb-1">{t('landArea')}</p>
+              <p className="font-bold text-slate-800">{crop.landArea} {crop.unit}</p>
+            </div>
+            <div className="border border-slate-200 p-4 rounded-xl">
+              <p className="text-xs uppercase font-bold text-slate-400 mb-1">{t('locationLabel')}</p>
+              <p className="font-bold text-slate-800">{crop.location || 'General'}</p>
+            </div>
           </div>
-          <div className="border border-slate-200 p-4 rounded-xl">
-            <p className="text-xs uppercase font-bold text-slate-400 mb-1">{t('landArea')}</p>
-            <p className="font-bold text-slate-800">{crop.landArea} {crop.unit}</p>
-          </div>
-          <div className="border border-slate-200 p-4 rounded-xl">
-            <p className="text-xs uppercase font-bold text-slate-400 mb-1">{t('locationLabel')}</p>
-            <p className="font-bold text-slate-800">{crop.location || 'General'}</p>
-          </div>
-        </div>
 
-        <div className="mb-6">
-          <h2 className="text-xl font-bold text-slate-800 mb-2">{t('salesSummary')}</h2>
-          <table className="w-full text-left mb-4">
+          <div className="mb-6">
+            <h2 className="text-xl font-bold text-slate-800 mb-2">{t('salesSummary')}</h2>
+            <table className="w-full text-left mb-4">
+              <thead>
+                <tr className="bg-blue-50">
+                  <th className="px-4 py-3">{t('dateLabel')}</th>
+                  <th className="px-4 py-3">{t('descriptionLabel')}</th>
+                  <th className="px-4 py-3 text-right">{t('amountLabel')}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {crop.sales && crop.sales.length > 0 ? crop.sales.map(sale => (
+                  <tr key={sale._id || sale.id} className="border-b">
+                    <td className="px-4 py-3">{new Date(sale.date).toLocaleDateString()}</td>
+                    <td className="px-4 py-3">{sale.description || '-'}</td>
+                    <td className="px-4 py-3 text-right">₹{sale.amount.toLocaleString()}</td>
+                  </tr>
+                )) : (
+                  <tr><td colSpan={3} className="px-4 py-3 text-center text-slate-500 italic">{t('noSalesRecorded')}</td></tr>
+                )}
+              </tbody>
+              <tfoot>
+                <tr className="bg-blue-50">
+                  <td colSpan={2} className="px-4 py-4 text-right font-bold text-blue-800 text-xl">{t('totalSalesFooter')}</td>
+                  <td className="px-4 py-4 text-right font-bold text-blue-900 text-2xl">₹{totalSales.toLocaleString()}</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <h2 className="text-2xl font-bold text-slate-800 mb-4 border-b pb-2">{t('completeExpenseBreakdown')}</h2>
+          <table className="w-full text-left mb-10">
             <thead>
-              <tr className="bg-blue-50">
+              <tr className="bg-slate-100">
+                <th className="px-4 py-3">{t('expenseTypeLabel')}</th>
                 <th className="px-4 py-3">{t('dateLabel')}</th>
                 <th className="px-4 py-3">{t('descriptionLabel')}</th>
                 <th className="px-4 py-3 text-right">{t('amountLabel')}</th>
               </tr>
             </thead>
             <tbody>
-              {crop.sales && crop.sales.length > 0 ? crop.sales.map(sale => (
-                <tr key={sale._id || sale.id} className="border-b">
-                  <td className="px-4 py-3">{new Date(sale.date).toLocaleDateString()}</td>
-                  <td className="px-4 py-3">{sale.description || '-'}</td>
-                  <td className="px-4 py-3 text-right">₹{sale.amount.toLocaleString()}</td>
+              {crop.expenses.map(exp => (
+                <tr key={exp._id || exp.id} className="border-b">
+                  <td className="px-4 py-3 font-bold">{getExpenseTypeLabel(exp.type)}</td>
+                  <td className="px-4 py-3">{new Date(exp.date).toLocaleDateString()}</td>
+                  <td className="px-4 py-3">{exp.description}</td>
+                  <td className="px-4 py-3 text-right">₹{exp.amount.toLocaleString()}</td>
                 </tr>
-              )) : (
-                <tr><td colSpan={3} className="px-4 py-3 text-center text-slate-500 italic">{t('noSalesRecorded')}</td></tr>
-              )}
+              ))}
             </tbody>
             <tfoot>
-              <tr className="bg-blue-50">
-                <td colSpan={2} className="px-4 py-4 text-right font-bold text-blue-800 text-xl">{t('totalSalesFooter')}</td>
-                <td className="px-4 py-4 text-right font-bold text-blue-900 text-2xl">₹{totalSales.toLocaleString()}</td>
+              <tr className="bg-emerald-50">
+                <td colSpan={3} className="px-4 py-5 text-right font-bold text-emerald-800 text-xl">{t('totalCost')}</td>
+                <td className="px-4 py-5 text-right font-bold text-emerald-900 text-2xl">₹{totalExpense.toLocaleString()}</td>
               </tr>
             </tfoot>
           </table>
-        </div>
 
-        <h2 className="text-2xl font-bold text-slate-800 mb-4 border-b pb-2">{t('completeExpenseBreakdown')}</h2>
-        <table className="w-full text-left mb-10">
-          <thead>
-            <tr className="bg-slate-100">
-              <th className="px-4 py-3">{t('expenseTypeLabel')}</th>
-              <th className="px-4 py-3">{t('dateLabel')}</th>
-              <th className="px-4 py-3">{t('descriptionLabel')}</th>
-              <th className="px-4 py-3 text-right">{t('amountLabel')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {crop.expenses.map(exp => (
-              <tr key={exp._id || exp.id} className="border-b">
-                <td className="px-4 py-3 font-bold">{getExpenseTypeLabel(exp.type)}</td>
-                <td className="px-4 py-3">{new Date(exp.date).toLocaleDateString()}</td>
-                <td className="px-4 py-3">{exp.description}</td>
-                <td className="px-4 py-3 text-right">₹{exp.amount.toLocaleString()}</td>
-              </tr>
-            ))}
-          </tbody>
-          <tfoot>
-            <tr className="bg-emerald-50">
-              <td colSpan={3} className="px-4 py-5 text-right font-bold text-emerald-800 text-xl">{t('totalCost')}</td>
-              <td className="px-4 py-5 text-right font-bold text-emerald-900 text-2xl">₹{totalExpense.toLocaleString()}</td>
-            </tr>
-          </tfoot>
-        </table>
-
-        <div className="flex justify-end mb-10">
-          <div className={`px-6 py-4 rounded-2xl border ${profit >= 0 ? 'bg-emerald-50 border-emerald-100' : 'bg-red-50 border-red-100'}`}>
-            <p className={`text-sm font-bold ${profit >= 0 ? 'text-emerald-800' : 'text-red-800'}`}>{profit >= 0 ? 'TOTAL PROFIT' : 'TOTAL LOSS'}</p>
-            <p className={`text-2xl font-bold font-outfit ${profit >= 0 ? 'text-emerald-700' : 'text-red-700'}`}>₹{Math.abs(profit).toLocaleString()}</p>
+          <div className="flex justify-end mb-10">
+            <div className={`px-6 py-4 rounded-2xl border ${profit >= 0 ? 'bg-emerald-50 border-emerald-100' : 'bg-red-50 border-red-100'}`}>
+              <p className={`text-sm font-bold ${profit >= 0 ? 'text-emerald-800' : 'text-red-800'}`}>{profit >= 0 ? 'TOTAL PROFIT' : 'TOTAL LOSS'}</p>
+              <p className={`text-2xl font-bold font-outfit ${profit >= 0 ? 'text-emerald-700' : 'text-red-700'}`}>₹{Math.abs(profit).toLocaleString()}</p>
+            </div>
           </div>
-        </div>
 
 
-        <div className="mt-20 flex justify-between">
-          <div className="text-center">
-            <div className="w-48 border-b border-slate-400 mb-2"></div>
-            <p className="text-sm font-medium text-slate-500">{t('farmerSignature')}</p>
+          <div className="mt-20 flex justify-between">
+            <div className="text-center">
+              <div className="w-48 border-b border-slate-400 mb-2"></div>
+              <p className="text-sm font-medium text-slate-500">{t('farmerSignature')}</p>
+            </div>
+            <div className="text-right">
+              <p className="text-xs text-slate-400">© Generated via AgriExpense Platform</p>
+            </div>
           </div>
-          <div className="text-right">
-            <p className="text-xs text-slate-400">© Generated via AgriExpense Platform</p>
-          </div>
-        </div>
         </div>
       </div>
 
@@ -726,7 +726,7 @@ const CropDetails = () => {
       {showExpenseModal && (
         <div className="fixed inset-0 z-[60] overflow-y-auto">
           <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-            <div className="fixed inset-0 z-[60] transition-opacity bg-slate-900 bg-opacity-60 backdrop-blur-sm" onClick={() => { setShowExpenseModal(false); setIsEditingExpense(false); setEditingExpenseId(null); }}></div>
+            <div className="fixed inset-0 z-[60] transition-opacity bg-slate-900 bg-opacity-70" onClick={() => { setShowExpenseModal(false); setIsEditingExpense(false); setEditingExpenseId(null); }}></div>
             <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
             <div className="relative z-[70] inline-block align-bottom bg-white rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
               <form onSubmit={handleAddExpense}>
@@ -741,11 +741,11 @@ const CropDetails = () => {
                 <div className="px-6 py-6 space-y-4">
                   <div>
                     <label className="block text-sm font-bold text-slate-700 mb-1">{t('expenseTypeLabel')}</label>
-                    <select 
-                      required 
+                    <select
+                      required
                       className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
                       value={expenseData.type}
-                      onChange={e => setExpenseData({...expenseData, type: e.target.value})}
+                      onChange={e => setExpenseData({ ...expenseData, type: e.target.value })}
                     >
                       {Object.values(ExpenseType).map(type => (
                         <option key={type} value={type}>{getExpenseTypeLabel(type)}</option>
@@ -758,22 +758,22 @@ const CropDetails = () => {
                       <div className="grid grid-cols-2 gap-4">
                         <div>
                           <label className="block text-sm font-bold text-slate-700 mb-1">{t('dateLabel')}</label>
-                          <input type="date" required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all" value={expenseData.date} onChange={e => setExpenseData({...expenseData, date: e.target.value})} />
+                          <input type="date" required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all" value={expenseData.date} onChange={e => setExpenseData({ ...expenseData, date: e.target.value })} />
                         </div>
                         <div>
                           <label className="block text-sm font-bold text-slate-700 mb-1">{t('ownerOperator')}</label>
-                          <input type="text" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.machineOwner} onChange={e => setExpenseData({...expenseData, machineOwner: e.target.value})} />
+                          <input type="text" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.machineOwner} onChange={e => setExpenseData({ ...expenseData, machineOwner: e.target.value })} />
                         </div>
                         <div>
                           <label className="block text-sm font-bold text-slate-700 mb-1">{t('runningTime')}</label>
                           <div className="flex gap-2">
-                            <input type="number" min={0} className="w-1/2 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" placeholder={t('hours')} value={expenseData.runningHours} onChange={e => setExpenseData({...expenseData, runningHours: e.target.value})} />
-                            <input type="number" min={0} max={59} className="w-1/2 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" placeholder={t('minutes')} value={expenseData.runningMinutes} onChange={e => setExpenseData({...expenseData, runningMinutes: e.target.value})} />
+                            <input type="number" min={0} className="w-1/2 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" placeholder={t('hours')} value={expenseData.runningHours} onChange={e => setExpenseData({ ...expenseData, runningHours: e.target.value })} />
+                            <input type="number" min={0} max={59} className="w-1/2 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" placeholder={t('minutes')} value={expenseData.runningMinutes} onChange={e => setExpenseData({ ...expenseData, runningMinutes: e.target.value })} />
                           </div>
                         </div>
                         <div>
                           <label className="block text-sm font-bold text-slate-700 mb-1">{t('chargePerHour')}</label>
-                          <input type="number" min={0} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.chargePerUnit} onChange={e => setExpenseData({...expenseData, chargePerUnit: e.target.value})} />
+                          <input type="number" min={0} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.chargePerUnit} onChange={e => setExpenseData({ ...expenseData, chargePerUnit: e.target.value })} />
                         </div>
                       </div>
                       <div className="mt-2 text-right font-bold text-emerald-700">{t('totalLabel')}: ₹{(() => {
@@ -791,22 +791,22 @@ const CropDetails = () => {
                       <div className="grid grid-cols-2 gap-4">
                         <div>
                           <label className="block text-sm font-bold text-slate-700 mb-1">{t('dateLabel')}</label>
-                          <input type="date" required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all" value={expenseData.date} onChange={e => setExpenseData({...expenseData, date: e.target.value})} />
+                          <input type="date" required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all" value={expenseData.date} onChange={e => setExpenseData({ ...expenseData, date: e.target.value })} />
                         </div>
                         <div>
                           <label className="block text-sm font-bold text-slate-700 mb-1">{t('ownerOperator')}</label>
-                          <input type="text" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.machineOwner} onChange={e => setExpenseData({...expenseData, machineOwner: e.target.value})} />
+                          <input type="text" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.machineOwner} onChange={e => setExpenseData({ ...expenseData, machineOwner: e.target.value })} />
                         </div>
                         <div>
                           <label className="block text-sm font-bold text-slate-700 mb-1">{t('runningTime')}</label>
                           <div className="flex gap-2">
-                            <input type="number" min={0} className="w-1/2 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" placeholder={t('hours')} value={expenseData.runningHours} onChange={e => setExpenseData({...expenseData, runningHours: e.target.value})} />
-                            <input type="number" min={0} max={59} className="w-1/2 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" placeholder={t('minutes')} value={expenseData.runningMinutes} onChange={e => setExpenseData({...expenseData, runningMinutes: e.target.value})} />
+                            <input type="number" min={0} className="w-1/2 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" placeholder={t('hours')} value={expenseData.runningHours} onChange={e => setExpenseData({ ...expenseData, runningHours: e.target.value })} />
+                            <input type="number" min={0} max={59} className="w-1/2 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" placeholder={t('minutes')} value={expenseData.runningMinutes} onChange={e => setExpenseData({ ...expenseData, runningMinutes: e.target.value })} />
                           </div>
                         </div>
                         <div>
                           <label className="block text-sm font-bold text-slate-700 mb-1">{t('chargePerHour')}</label>
-                          <input type="number" min={0} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.chargePerUnit} onChange={e => setExpenseData({...expenseData, chargePerUnit: e.target.value})} />
+                          <input type="number" min={0} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.chargePerUnit} onChange={e => setExpenseData({ ...expenseData, chargePerUnit: e.target.value })} />
                         </div>
                       </div>
                       <div className="mt-2 text-right font-bold text-emerald-700">{t('totalLabel')}: ₹{(() => {
@@ -820,11 +820,11 @@ const CropDetails = () => {
                       <div className="mt-4 grid grid-cols-2 gap-4">
                         <div>
                           <label className="block text-sm font-bold text-slate-700 mb-1">{t('notesOptionalLabel')}</label>
-                          <input type="text" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.notes} onChange={e => setExpenseData({...expenseData, notes: e.target.value})} />
+                          <input type="text" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.notes} onChange={e => setExpenseData({ ...expenseData, notes: e.target.value })} />
                         </div>
                         <div>
                           <label className="block text-sm font-bold text-slate-700 mb-1">{t('paymentMode')}</label>
-                          <select className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.paymentMode} onChange={e => setExpenseData({...expenseData, paymentMode: e.target.value})}>
+                          <select className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.paymentMode} onChange={e => setExpenseData({ ...expenseData, paymentMode: e.target.value })}>
                             <option value="">Select</option>
                             <option value="cash">Cash</option>
                             <option value="upi">UPI</option>
@@ -840,18 +840,18 @@ const CropDetails = () => {
                       <div className="grid grid-cols-2 gap-4">
                         <div>
                           <label className="block text-sm font-bold text-slate-700 mb-1">{t('dateLabel')}</label>
-                          <input type="date" required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.date} onChange={e => setExpenseData({...expenseData, date: e.target.value})} />
+                          <input type="date" required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.date} onChange={e => setExpenseData({ ...expenseData, date: e.target.value })} />
                         </div>
                         <div>
                           <label className="block text-sm font-bold text-slate-700 mb-1">{t('labourType')}</label>
-                          <select className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.labourType} onChange={e => setExpenseData({...expenseData, labourType: e.target.value})}>
+                          <select className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.labourType} onChange={e => setExpenseData({ ...expenseData, labourType: e.target.value })}>
                             <option value="male">Male</option>
                             <option value="female">Female</option>
                           </select>
                         </div>
                         <div>
                           <label className="block text-sm font-bold text-slate-700 mb-1">{t('workingTime')}</label>
-                          <select className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.workingTime} onChange={e => setExpenseData({...expenseData, workingTime: e.target.value})}>
+                          <select className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.workingTime} onChange={e => setExpenseData({ ...expenseData, workingTime: e.target.value })}>
                             <option value="full">{t('fullDay')}</option>
                             <option value="half">{t('halfDay')}</option>
                             <option value="custom">{t('customHours')}</option>
@@ -860,24 +860,24 @@ const CropDetails = () => {
                         {expenseData.workingTime === 'custom' && (
                           <div>
                             <label className="block text-sm font-bold text-slate-700 mb-1">{t('customHours')}</label>
-                            <input type="number" min={1} max={24} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.customHours} onChange={e => setExpenseData({...expenseData, customHours: e.target.value})} />
+                            <input type="number" min={1} max={24} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.customHours} onChange={e => setExpenseData({ ...expenseData, customHours: e.target.value })} />
                           </div>
                         )}
                         <div>
                           <label className="block text-sm font-bold text-slate-700 mb-1">{t('chargePerPerson')}</label>
-                          <input type="number" min={0} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.chargePerPerson} onChange={e => setExpenseData({...expenseData, chargePerPerson: e.target.value})} />
+                          <input type="number" min={0} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.chargePerPerson} onChange={e => setExpenseData({ ...expenseData, chargePerPerson: e.target.value })} />
                         </div>
                         <div>
                           <label className="block text-sm font-bold text-slate-700 mb-1">{t('numberOfWorkers')}</label>
-                          <input type="number" min={1} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.labourQty} onChange={e => setExpenseData({...expenseData, labourQty: e.target.value})} />
+                          <input type="number" min={1} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.labourQty} onChange={e => setExpenseData({ ...expenseData, labourQty: e.target.value })} />
                         </div>
                         <div>
                           <label className="block text-sm font-bold text-slate-700 mb-1">{t('daysOfWork')}</label>
-                          <input type="number" min={1} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.daysOfWork} onChange={e => setExpenseData({...expenseData, daysOfWork: e.target.value})} />
+                          <input type="number" min={1} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.daysOfWork} onChange={e => setExpenseData({ ...expenseData, daysOfWork: e.target.value })} />
                         </div>
                         <div className="col-span-2">
                           <label className="block text-sm font-bold text-slate-700 mb-1">{t('workDescription')}</label>
-                          <input type="text" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.description} onChange={e => setExpenseData({...expenseData, description: e.target.value})} />
+                          <input type="text" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.description} onChange={e => setExpenseData({ ...expenseData, description: e.target.value })} />
                         </div>
                       </div>
                       <div className="mt-2 text-right font-bold text-emerald-700">{t('totalLabel')}: ₹{(() => {
@@ -897,22 +897,22 @@ const CropDetails = () => {
                       <div className="grid grid-cols-2 gap-4">
                         <div>
                           <label className="block text-sm font-bold text-slate-700 mb-1">{t('dateLabel')}</label>
-                          <input type="date" required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all" value={expenseData.date} onChange={e => setExpenseData({...expenseData, date: e.target.value})} />
+                          <input type="date" required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all" value={expenseData.date} onChange={e => setExpenseData({ ...expenseData, date: e.target.value })} />
                         </div>
                         <div>
                           <label className="block text-sm font-bold text-slate-700 mb-1">{t('ownerOperator')}</label>
-                          <input type="text" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.threshingOwner} onChange={e => setExpenseData({...expenseData, threshingOwner: e.target.value})} />
+                          <input type="text" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.threshingOwner} onChange={e => setExpenseData({ ...expenseData, threshingOwner: e.target.value })} />
                         </div>
                         <div>
                           <label className="block text-sm font-bold text-slate-700 mb-1">{t('runningTime')}</label>
                           <div className="flex gap-2">
-                            <input type="number" min={0} className="w-1/2 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" placeholder={t('hours')} value={expenseData.threshingHours} onChange={e => setExpenseData({...expenseData, threshingHours: e.target.value})} />
-                            <input type="number" min={0} max={59} className="w-1/2 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" placeholder={t('minutes')} value={expenseData.threshingMinutes} onChange={e => setExpenseData({...expenseData, threshingMinutes: e.target.value})} />
+                            <input type="number" min={0} className="w-1/2 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" placeholder={t('hours')} value={expenseData.threshingHours} onChange={e => setExpenseData({ ...expenseData, threshingHours: e.target.value })} />
+                            <input type="number" min={0} max={59} className="w-1/2 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" placeholder={t('minutes')} value={expenseData.threshingMinutes} onChange={e => setExpenseData({ ...expenseData, threshingMinutes: e.target.value })} />
                           </div>
                         </div>
                         <div>
                           <label className="block text-sm font-bold text-slate-700 mb-1">{t('chargePerHour')}</label>
-                          <input type="number" min={0} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.threshingChargePerUnit} onChange={e => setExpenseData({...expenseData, threshingChargePerUnit: e.target.value})} />
+                          <input type="number" min={0} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.threshingChargePerUnit} onChange={e => setExpenseData({ ...expenseData, threshingChargePerUnit: e.target.value })} />
                         </div>
                       </div>
                       <div className="mt-2 text-right font-bold text-emerald-700">{t('totalLabel')}: ₹{(() => {
@@ -930,23 +930,23 @@ const CropDetails = () => {
                       <div className="grid grid-cols-2 gap-4">
                         <div>
                           <label className="block text-sm font-bold text-slate-700 mb-1">{t('dateLabel')}</label>
-                          <input type="date" required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.date} onChange={e => setExpenseData({...expenseData, date: e.target.value})} />
+                          <input type="date" required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.date} onChange={e => setExpenseData({ ...expenseData, date: e.target.value })} />
                         </div>
                         <div>
                           <label className="block text-sm font-bold text-slate-700 mb-1">{t('itemName')}</label>
-                          <input type="text" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.itemName} onChange={e => setExpenseData({...expenseData, itemName: e.target.value})} />
+                          <input type="text" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.itemName} onChange={e => setExpenseData({ ...expenseData, itemName: e.target.value })} />
                         </div>
                         <div>
                           <label className="block text-sm font-bold text-slate-700 mb-1">{t('unitPrice')}</label>
-                          <input type="number" min={0} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.unitPrice} onChange={e => setExpenseData({...expenseData, unitPrice: e.target.value})} />
+                          <input type="number" min={0} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.unitPrice} onChange={e => setExpenseData({ ...expenseData, unitPrice: e.target.value })} />
                         </div>
                         <div>
                           <label className="block text-sm font-bold text-slate-700 mb-1">{t('quantity')}</label>
-                          <input type="number" min={0} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.quantity} onChange={e => setExpenseData({...expenseData, quantity: e.target.value})} />
+                          <input type="number" min={0} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.quantity} onChange={e => setExpenseData({ ...expenseData, quantity: e.target.value })} />
                         </div>
                         <div>
                           <label className="block text-sm font-bold text-slate-700 mb-1">{t('unitLabel')}</label>
-                          <select className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.unit} onChange={e => setExpenseData({...expenseData, unit: e.target.value})}>
+                          <select className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.unit} onChange={e => setExpenseData({ ...expenseData, unit: e.target.value })}>
                             <option value="kg">kg</option>
                             <option value="liter">liter</option>
                             <option value="bag">bag</option>
@@ -955,7 +955,7 @@ const CropDetails = () => {
                         </div>
                         <div>
                           <label className="block text-sm font-bold text-slate-700 mb-1">{t('brandSupplier')}</label>
-                          <input type="text" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.brand} onChange={e => setExpenseData({...expenseData, brand: e.target.value})} />
+                          <input type="text" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.brand} onChange={e => setExpenseData({ ...expenseData, brand: e.target.value })} />
                         </div>
                       </div>
                       <div className="mt-2 text-right font-bold text-emerald-700">{t('totalLabel')}: ₹{(() => {
@@ -970,11 +970,11 @@ const CropDetails = () => {
                   <div className="mt-4 grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-bold text-slate-700 mb-1">{t('notesOptionalLabel')}</label>
-                      <input type="text" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.notes} onChange={e => setExpenseData({...expenseData, notes: e.target.value})} />
+                      <input type="text" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.notes} onChange={e => setExpenseData({ ...expenseData, notes: e.target.value })} />
                     </div>
                     <div>
                       <label className="block text-sm font-bold text-slate-700 mb-1">{t('paymentMode')}</label>
-                      <select className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.paymentMode} onChange={e => setExpenseData({...expenseData, paymentMode: e.target.value})}>
+                      <select className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.paymentMode} onChange={e => setExpenseData({ ...expenseData, paymentMode: e.target.value })}>
                         <option value="">Select</option>
                         <option value="cash">Cash</option>
                         <option value="upi">UPI</option>
@@ -985,19 +985,19 @@ const CropDetails = () => {
                   </div>
                   <div className="mt-2">
                     <label className="block text-sm font-bold text-slate-700 mb-1">{t('billUpload')}</label>
-                    <input type="file" accept="image/*,application/pdf" className="w-full" onChange={e => setExpenseData({...expenseData, billPhoto: e.target.files[0]})} />
+                    <input type="file" accept="image/*,application/pdf" className="w-full" onChange={e => setExpenseData({ ...expenseData, billPhoto: e.target.files[0] })} />
                   </div>
                 </div>
                 <div className="px-6 py-4 bg-slate-50 flex space-x-3 rounded-b-3xl">
-                  <button 
-                    type="button" 
+                  <button
+                    type="button"
                     onClick={() => { setShowExpenseModal(false); setIsEditingExpense(false); setEditingExpenseId(null); }}
                     className="flex-1 py-3 border border-slate-300 rounded-xl font-bold text-slate-600 hover:bg-slate-100 transition-colors"
                   >
                     Cancel
                   </button>
-                  <button 
-                    type="submit" 
+                  <button
+                    type="submit"
                     className="flex-1 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold shadow-lg shadow-emerald-200 transition-all"
                   >
                     {isEditingExpense ? t('updateExpense') : t('saveExpense')}
@@ -1013,7 +1013,7 @@ const CropDetails = () => {
       {showSaleModal && (
         <div className="fixed inset-0 z-[60] overflow-y-auto">
           <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-            <div className="fixed inset-0 transition-opacity bg-slate-900 bg-opacity-60 backdrop-blur-sm" onClick={() => setShowSaleModal(false)}></div>
+            <div className="fixed inset-0 transition-opacity bg-slate-900 bg-opacity-70" onClick={() => setShowSaleModal(false)}></div>
             <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
             <div className="inline-block align-bottom bg-white rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
               <form onSubmit={handleAddSale}>
@@ -1029,19 +1029,19 @@ const CropDetails = () => {
                   <div>
                     <label className="block text-sm font-bold text-slate-700 mb-1">{t('cropWeight')}</label>
                     <div className="flex gap-2">
-                      <input 
-                        type="number" 
+                      <input
+                        type="number"
                         min={0}
-                        required 
+                        required
                         className="w-2/3 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                         placeholder="Weight"
                         value={saleData.weight}
-                        onChange={e => setSaleData({...saleData, weight: e.target.value})}
+                        onChange={e => setSaleData({ ...saleData, weight: e.target.value })}
                       />
                       <select
                         className="w-1/3 px-2 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                         value={saleData.weightUnit}
-                        onChange={e => setSaleData({...saleData, weightUnit: e.target.value})}
+                        onChange={e => setSaleData({ ...saleData, weightUnit: e.target.value })}
                       >
                         <option value="kg">kg</option>
                         <option value="quintal">quintal</option>
@@ -1051,14 +1051,14 @@ const CropDetails = () => {
                   </div>
                   <div>
                     <label className="block text-sm font-bold text-slate-700 mb-1">{t('ratePerUnit', { unit: saleData.weightUnit })}</label>
-                    <input 
-                      type="number" 
+                    <input
+                      type="number"
                       min={0}
-                      required 
+                      required
                       className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                       placeholder="0.00"
                       value={saleData.ratePerUnit}
-                      onChange={e => setSaleData({...saleData, ratePerUnit: e.target.value})}
+                      onChange={e => setSaleData({ ...saleData, ratePerUnit: e.target.value })}
                     />
                   </div>
                   <div className="text-right font-bold text-blue-700">
@@ -1071,35 +1071,35 @@ const CropDetails = () => {
                   </div>
                   <div>
                     <label className="block text-sm font-bold text-slate-700 mb-1">{t('dateLabel')}</label>
-                    <input 
-                      type="date" 
-                      required 
+                    <input
+                      type="date"
+                      required
                       className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                       value={saleData.date}
-                      onChange={e => setSaleData({...saleData, date: e.target.value})}
+                      onChange={e => setSaleData({ ...saleData, date: e.target.value })}
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-bold text-slate-700 mb-1">{t('descriptionOptional')}</label>
-                    <textarea 
+                    <textarea
                       className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all resize-none"
                       rows={2}
                       placeholder="e.g. Sold to local market"
                       value={saleData.description}
-                      onChange={e => setSaleData({...saleData, description: e.target.value})}
+                      onChange={e => setSaleData({ ...saleData, description: e.target.value })}
                     />
                   </div>
                 </div>
                 <div className="px-6 py-4 bg-slate-50 flex space-x-3 rounded-b-3xl">
-                  <button 
-                    type="button" 
+                  <button
+                    type="button"
                     onClick={() => setShowSaleModal(false)}
                     className="flex-1 py-3 border border-slate-300 rounded-xl font-bold text-slate-600 hover:bg-slate-100 transition-colors"
                   >
                     {t('cancel')}
                   </button>
-                  <button 
-                    type="submit" 
+                  <button
+                    type="submit"
                     className="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold shadow-lg shadow-blue-200 transition-all"
                   >
                     {t('saveSaleComplete')}

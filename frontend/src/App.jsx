@@ -14,6 +14,10 @@ import History from './pages/History';
 import Navbar from './components/Navbar';
 import MobileNav from './components/MobileNav';
 import ProtectedRoute from './components/ProtectedRoute';
+import MandiPrices from './pages/MandiPrices';
+import SeasonCompare from './pages/SeasonCompare';
+import GovSchemes from './pages/GovSchemes';
+import OfflineIndicator from './components/OfflineIndicator';
 
 import { LanguageProvider } from './i18n.jsx';
 import { NotificationProvider } from './components/NotificationProvider.jsx';
@@ -86,77 +90,102 @@ const App = () => {
             {auth.isAuthenticated && <Navbar user={auth.user} onLogout={logout} />}
             <main className="flex-grow pb-20 md:pb-0">
               <Routes>
-              <Route 
-                path="/login" 
-                element={!auth.isAuthenticated ? <Login onLogin={login} /> : <Navigate to="/" />} 
-              />
-              <Route 
-                path="/register" 
-                element={!auth.isAuthenticated ? <Register onLogin={login} /> : <Navigate to="/" />} 
-              />
-              <Route 
-                path="/" 
-                element={
-                  <ProtectedRoute isAuthenticated={auth.isAuthenticated}>
-                    <Dashboard user={auth.user} showAddCropModal={showAddCropModal} setShowAddCropModal={setShowAddCropModal} />
-                  </ProtectedRoute>
-                } 
-              />
-              <Route 
-                path="/crop/:id" 
-                element={
-                  <ProtectedRoute isAuthenticated={auth.isAuthenticated}>
-                    <CropDetails />
-                  </ProtectedRoute>
-                } 
-              />
-              <Route 
-                path="/account" 
-                element={
-                  <ProtectedRoute isAuthenticated={auth.isAuthenticated}>
-                    <Account user={auth.user} onLogout={logout} onUpdateUser={updateUser} />
-                  </ProtectedRoute>
-                } 
-              />
-              <Route 
-                path="/profile" 
-                element={
-                  <ProtectedRoute isAuthenticated={auth.isAuthenticated}>
-                    <Profile user={auth.user} onUpdateUser={updateUser} />
-                  </ProtectedRoute>
-                } 
-              />
-              <Route 
-                path="/settings" 
-                element={
-                  <ProtectedRoute isAuthenticated={auth.isAuthenticated}>
-                    <Settings />
-                  </ProtectedRoute>
-                } 
-              />
-              <Route 
-                path="/help" 
-                element={
-                  <ProtectedRoute isAuthenticated={auth.isAuthenticated}>
-                    <Help />
-                  </ProtectedRoute>
-                } 
-              />
-              <Route 
-                path="/history" 
-                element={
-                  <ProtectedRoute isAuthenticated={auth.isAuthenticated}>
-                    <History />
-                  </ProtectedRoute>
-                } 
-              />
-              <Route path="*" element={<Navigate to="/" />} />
-            </Routes>
-          </main>
+                <Route
+                  path="/login"
+                  element={!auth.isAuthenticated ? <Login onLogin={login} /> : <Navigate to="/" />}
+                />
+                <Route
+                  path="/register"
+                  element={!auth.isAuthenticated ? <Register onLogin={login} /> : <Navigate to="/" />}
+                />
+                <Route
+                  path="/"
+                  element={
+                    <ProtectedRoute isAuthenticated={auth.isAuthenticated}>
+                      <Dashboard user={auth.user} showAddCropModal={showAddCropModal} setShowAddCropModal={setShowAddCropModal} />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/crop/:id"
+                  element={
+                    <ProtectedRoute isAuthenticated={auth.isAuthenticated}>
+                      <CropDetails />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/account"
+                  element={
+                    <ProtectedRoute isAuthenticated={auth.isAuthenticated}>
+                      <Account user={auth.user} onLogout={logout} onUpdateUser={updateUser} />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/profile"
+                  element={
+                    <ProtectedRoute isAuthenticated={auth.isAuthenticated}>
+                      <Profile user={auth.user} onUpdateUser={updateUser} />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/settings"
+                  element={
+                    <ProtectedRoute isAuthenticated={auth.isAuthenticated}>
+                      <Settings />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/help"
+                  element={
+                    <ProtectedRoute isAuthenticated={auth.isAuthenticated}>
+                      <Help />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/history"
+                  element={
+                    <ProtectedRoute isAuthenticated={auth.isAuthenticated}>
+                      <History />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/mandi-prices"
+                  element={
+                    <ProtectedRoute isAuthenticated={auth.isAuthenticated}>
+                      <MandiPrices user={auth.user} />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/season-compare"
+                  element={
+                    <ProtectedRoute isAuthenticated={auth.isAuthenticated}>
+                      <SeasonCompare />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/gov-schemes"
+                  element={
+                    <ProtectedRoute isAuthenticated={auth.isAuthenticated}>
+                      <GovSchemes />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route path="*" element={<Navigate to="/" />} />
+              </Routes>
+            </main>
             {auth.isAuthenticated && <MobileNav onAddCrop={() => {
               setShowAddCropModal(true);
               window.location.hash = '#/';
             }} />}
+            <OfflineIndicator />
           </div>
         </HashRouter>
       </LanguageProvider>

@@ -1,14 +1,3 @@
-// @desc    Delete all crops for a user
-// @route   DELETE /api/crops
-// @access  Private
-export const deleteAllCrops = async (req, res) => {
-  try {
-    await Crop.deleteMany({ userId: req.user.id });
-    res.json({ success: true, message: 'All crops deleted' });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-};
 import Crop from '../models/Crop.model.js';
 
 // @desc    Get all crops for a user
@@ -148,5 +137,17 @@ export const addSale = async (req, res) => {
     res.status(201).json({ success: true, data: crop });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
+  }
+};
+
+// @desc    Delete all crops for a user
+// @route   DELETE /api/crops
+// @access  Private
+export const deleteAllCrops = async (req, res) => {
+  try {
+    await Crop.deleteMany({ userId: req.user.id });
+    res.json({ success: true, message: 'All crops deleted' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
   }
 };

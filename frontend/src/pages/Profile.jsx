@@ -147,20 +147,20 @@ const Profile = ({ user, onUpdateUser, isOpen, onClose }) => {
     fetchPinDetails();
     // eslint-disable-next-line
   }, [formData.pincode]);
-                  <div>
-                    <label className="block text-sm font-bold text-slate-700 mb-1.5">Pin Code</label>
-                    <input
-                      type="text"
-                      className="w-full px-4 py-3 border border-slate-200 rounded-xl bg-white focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
-                      placeholder="Enter 6-digit PIN code"
-                      value={formData.pincode}
-                      maxLength={6}
-                      onChange={e => setFormData({ ...formData, pincode: e.target.value.replace(/[^0-9]/g, '') })}
-                    />
-                    {pinLoading && (
-                      <span className="text-xs text-emerald-600">Fetching address...</span>
-                    )}
-                  </div>
+  <div>
+    <label className="block text-sm font-bold text-slate-700 mb-1.5">Pin Code</label>
+    <input
+      type="text"
+      className="w-full px-4 py-3 border border-slate-200 rounded-xl bg-white focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
+      placeholder="Enter 6-digit PIN code"
+      value={formData.pincode}
+      maxLength={6}
+      onChange={e => setFormData({ ...formData, pincode: e.target.value.replace(/[^0-9]/g, '') })}
+    />
+    {pinLoading && (
+      <span className="text-xs text-emerald-600">Fetching address...</span>
+    )}
+  </div>
 
   const handleCancel = () => {
     setFormData({ ...profileData });
@@ -287,12 +287,12 @@ const Profile = ({ user, onUpdateUser, isOpen, onClose }) => {
           <div className={isModal ? 'space-y-4' : 'grid grid-cols-1 md:grid-cols-2 gap-5'}>
             <div>
               <label className="block text-sm font-bold text-slate-700 mb-1.5">{t('fullName')}</label>
-              <input 
-                type="text" 
-                required 
+              <input
+                type="text"
+                required
                 className="w-full px-4 py-3 border border-slate-200 rounded-xl bg-white focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
                 value={formData.name}
-                onChange={e => setFormData({...formData, name: e.target.value})}
+                onChange={e => setFormData({ ...formData, name: e.target.value })}
               />
             </div>
 
@@ -378,7 +378,7 @@ const Profile = ({ user, onUpdateUser, isOpen, onClose }) => {
             >
               {t('cancel')}
             </button>
-            <button 
+            <button
               type="submit"
               disabled={loading}
               className="flex-1 px-5 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-semibold shadow-lg shadow-emerald-200 transition-all flex items-center justify-center space-x-2"
@@ -408,14 +408,14 @@ const Profile = ({ user, onUpdateUser, isOpen, onClose }) => {
     return (
       <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center">
         {/* Backdrop */}
-        <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={handleClose}></div>
+        <div className="absolute inset-0 bg-black/50" onClick={handleClose}></div>
 
         {/* Modal Window */}
         <div className="relative w-full sm:max-w-lg max-h-[92vh] bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden flex flex-col animate-[slideUp_0.3s_ease-out]">
           {/* Header */}
           <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 px-5 py-4 flex items-center justify-between flex-shrink-0">
             <div className="flex items-center space-x-3">
-              <div className="bg-white/20 backdrop-blur-sm rounded-full p-2.5">
+              <div className="bg-white/20 rounded-full p-2.5">
                 <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                 </svg>
@@ -465,7 +465,7 @@ const Profile = ({ user, onUpdateUser, isOpen, onClose }) => {
         {/* Header */}
         <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 px-6 sm:px-8 py-6">
           <div className="flex items-center space-x-4">
-            <div className="bg-white/20 backdrop-blur-sm rounded-full p-3 sm:p-4">
+            <div className="bg-white/20 rounded-full p-3 sm:p-4">
               <svg className="w-10 h-10 sm:w-12 sm:h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
               </svg>

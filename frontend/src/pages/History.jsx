@@ -87,7 +87,7 @@ const History = () => {
       <div className="bg-white rounded-2xl shadow-md shadow-slate-200/50 border border-slate-100 overflow-hidden mb-5">
         <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-5">
           <div className="flex items-center space-x-3">
-            <div className="bg-white/20 backdrop-blur-sm rounded-full p-3">
+            <div className="bg-white/20 rounded-full p-3">
               <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
@@ -164,11 +164,10 @@ const History = () => {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center space-x-2 mb-1">
                         <h3 className="text-base font-bold text-slate-800 truncate">{crop.name}</h3>
-                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${
-                          crop.status === 'Active'
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${crop.status === 'Active'
                             ? 'bg-emerald-100 text-emerald-700'
                             : 'bg-slate-100 text-slate-600'
-                        }`}>
+                          }`}>
                           {crop.status === 'Active' ? t('statusActive') : t('statusCompleted')}
                         </span>
                       </div>

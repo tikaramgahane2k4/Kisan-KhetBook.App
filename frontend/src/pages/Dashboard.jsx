@@ -6,6 +6,7 @@ import { useNotification } from '../components/NotificationProvider.jsx';
 import { Link, useNavigate } from 'react-router-dom';
 import { cropAPI } from '../services/api';
 import { useTranslation } from '../i18n.jsx';
+import CropAdvisory from '../components/CropAdvisory';
 
 // Constants for Enums
 export const CropStatus = {
@@ -79,7 +80,7 @@ const Dashboard = ({ user, showAddCropModal, setShowAddCropModal }) => {
               setWeather(data);
             } else {
               // Fallback: try removing diacritics and common spelling
-                  const fallbackCity = city.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+              const fallbackCity = city.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
               getWeatherByCity(fallbackCity || 'Bhandara').then(fallbackData => {
                 setWeather(fallbackData);
               });
@@ -101,10 +102,10 @@ const Dashboard = ({ user, showAddCropModal, setShowAddCropModal }) => {
   }, [showAddCropModal, setShowAddCropModal]);
 
   const handleOpenAddModal = () => {
-    const defaultLocation = user?.city && user?.state 
-      ? `${user.city}, ${user.state}` 
+    const defaultLocation = user?.city && user?.state
+      ? `${user.city}, ${user.state}`
       : user?.city || user?.state || '';
-    
+
     setFormData({
       name: '',
       startDate: new Date().toISOString().split('T')[0],
@@ -121,7 +122,7 @@ const Dashboard = ({ user, showAddCropModal, setShowAddCropModal }) => {
 
   useEffect(() => {
     const fetchCrops = async () => {
-      if (user) {
+      if (user?._id) {
         try {
           setLoading(true);
           const response = await cropAPI.getCrops();
@@ -136,7 +137,8 @@ const Dashboard = ({ user, showAddCropModal, setShowAddCropModal }) => {
       }
     };
     fetchCrops();
-  }, [user]);
+    // eslint-disable-next-line
+  }, [user?._id]);
 
   const handleAddCrop = async (e) => {
     e.preventDefault();
@@ -183,7 +185,7 @@ const Dashboard = ({ user, showAddCropModal, setShowAddCropModal }) => {
     setIsEditing(true);
     const cropName = crop.name || '';
     const isInList = CROP_OPTIONS.some(option => option.startsWith(cropName.split(' (')[0]));
-    
+
     setFormData({
       name: isInList ? cropName : 'Other (अन्य / इतर)',
       startDate: crop.startDate ? new Date(crop.startDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
@@ -262,30 +264,88 @@ const Dashboard = ({ user, showAddCropModal, setShowAddCropModal }) => {
       {/* Weather Widget */}
       <div className="mb-6">
         {weatherLoading ? (
-          <div className="bg-blue-50 text-blue-700 px-4 py-3 rounded-xl inline-block">Loading weather...</div>
+          <div className="bg-gradient-to-r from-sky-500 to-blue-600 rounded-2xl p-5 sm:p-6 shadow-lg shadow-blue-200/40">
+            <div className="flex items-center space-x-3">
+              <div className="w-14 h-14 rounded-full bg-white/20 animate-pulse"></div>
+              <div className="space-y-2 flex-1">
+                <div className="h-4 w-32 bg-white/20 rounded animate-pulse"></div>
+                <div className="h-3 w-24 bg-white/20 rounded animate-pulse"></div>
+              </div>
+            </div>
+          </div>
         ) : weather ? (
-          <div className="bg-blue-50 px-4 py-3 rounded-xl flex items-center space-x-4 w-fit">
-            <img src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} alt="Weather" className="w-12 h-12" />
-            <div>
-              <div className="text-lg font-bold text-blue-700">{weatherCity || weather.name} Weather</div>
-              <div className="text-blue-700 text-sm">{weather.weather[0].description}</div>
-              <div className="text-blue-900 text-xl font-bold">{Math.round(weather.main.temp)}°C</div>
-              <div className="text-xs text-blue-700">Humidity: {weather.main.humidity}% | Wind: {weather.wind.speed} m/s</div>
+          <div className="bg-gradient-to-r from-sky-500 to-blue-600 rounded-2xl p-5 sm:p-6 shadow-lg shadow-blue-200/40 text-white">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+              {/* Icon + Temp */}
+              <div className="flex items-center space-x-3">
+                <div className="w-16 h-16 sm:w-18 sm:h-18 bg-white/15 rounded-2xl flex items-center justify-center flex-shrink-0">
+                  <img
+                    src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
+                    alt="Weather"
+                    className="w-14 h-14"
+                  />
+                </div>
+                <div>
+                  <div className="text-4xl sm:text-5xl font-bold font-outfit leading-none">{Math.round(weather.main.temp)}°<span className="text-2xl sm:text-3xl">C</span></div>
+                  <p className="text-white/80 text-sm capitalize mt-0.5">{weather.weather[0].description}</p>
+                </div>
+              </div>
+
+              {/* Divider - desktop only */}
+              <div className="hidden sm:block w-px h-16 bg-white/20 mx-2"></div>
+
+              {/* Details */}
+              <div className="flex-1">
+                <div className="flex items-center space-x-1.5 mb-2">
+                  <svg className="w-4 h-4 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                  </svg>
+                  <span className="text-sm font-semibold text-white/90">{weatherCity || weather.name}</span>
+                </div>
+                <div className="grid grid-cols-3 gap-2">
+                  <div className="bg-white/10 rounded-xl px-3 py-2 text-center">
+                    <p className="text-[10px] uppercase tracking-wider text-white/60 font-bold">{t('humidity') || 'Humidity'}</p>
+                    <p className="text-sm font-bold mt-0.5">{weather.main.humidity}%</p>
+                  </div>
+                  <div className="bg-white/10 rounded-xl px-3 py-2 text-center">
+                    <p className="text-[10px] uppercase tracking-wider text-white/60 font-bold">{t('wind') || 'Wind'}</p>
+                    <p className="text-sm font-bold mt-0.5">{weather.wind.speed} m/s</p>
+                  </div>
+                  <div className="bg-white/10 rounded-xl px-3 py-2 text-center">
+                    <p className="text-[10px] uppercase tracking-wider text-white/60 font-bold">{t('feelsLike') || 'Feels'}</p>
+                    <p className="text-sm font-bold mt-0.5">{Math.round(weather.main.feels_like)}°C</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         ) : (
-          <div className="bg-blue-50 text-blue-700 px-4 py-3 rounded-xl inline-block">Weather unavailable</div>
-        )}
-        {weatherCity && !weather && !weatherLoading && (
-          <div className="text-xs text-blue-700 mt-1">Weather lookup for: {weatherCity}</div>
+          <div className="bg-slate-100 rounded-2xl px-5 py-4 flex items-center space-x-3">
+            <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center flex-shrink-0">
+              <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path>
+              </svg>
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-slate-600">{t('weatherUnavailable') || 'Weather unavailable'}</p>
+              <p className="text-xs text-slate-400">{t('addPincode') || 'Add pincode in profile for local weather'}</p>
+            </div>
+          </div>
         )}
       </div>
+
+      {/* Crop Advisory Smart Tips */}
+      <CropAdvisory
+        weather={weather}
+        activeCrops={crops.filter(c => c.status === 'Active').map(c => c.name)}
+      />
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
           <h1 className="text-3xl font-bold text-slate-800 font-outfit">{t('farmOverview')}</h1>
           <p className="text-slate-500">{t('manageCrops')}</p>
         </div>
-        <button 
+        <button
           onClick={handleOpenAddModal}
           className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-xl font-semibold shadow-lg shadow-emerald-200 transition-all flex items-center space-x-2"
         >
@@ -306,7 +366,7 @@ const Dashboard = ({ user, showAddCropModal, setShowAddCropModal }) => {
             </div>
             <h3 className="text-lg font-bold text-slate-800">{t('noCrops')}</h3>
             <p className="text-slate-500 mb-6">{t('startTracking')}</p>
-            <button 
+            <button
               onClick={handleOpenAddModal}
               className="text-emerald-600 font-bold hover:underline"
             >
@@ -341,7 +401,7 @@ const Dashboard = ({ user, showAddCropModal, setShowAddCropModal }) => {
                     {crop.status}
                   </span>
                 </div>
-                
+
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
                     <p className="text-[10px] uppercase tracking-wider font-bold text-slate-400 mb-1">{t('landArea')}</p>
@@ -396,7 +456,7 @@ const Dashboard = ({ user, showAddCropModal, setShowAddCropModal }) => {
       {showModal && (
         <div className="fixed inset-0 z-[60] overflow-y-auto">
           <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-            <div className="fixed inset-0 transition-opacity bg-slate-900 bg-opacity-60 backdrop-blur-sm" onClick={() => setShowModal(false)}></div>
+            <div className="fixed inset-0 transition-opacity bg-slate-900 bg-opacity-70" onClick={() => setShowModal(false)}></div>
             <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
             <div className="inline-block align-bottom bg-white rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
               <form onSubmit={isEditing ? handleUpdateCrop : handleAddCrop}>
@@ -412,10 +472,10 @@ const Dashboard = ({ user, showAddCropModal, setShowAddCropModal }) => {
                   <div>
                     <label className="block text-sm font-bold text-slate-700 mb-1">{t('cropName')}</label>
                     <select
-                      required 
+                      required
                       className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
                       value={formData.name}
-                      onChange={e => setFormData({...formData, name: e.target.value})}
+                      onChange={e => setFormData({ ...formData, name: e.target.value })}
                     >
                       <option value="">{t('selectCrop')}</option>
                       {CROP_OPTIONS.map(crop => (
@@ -423,9 +483,9 @@ const Dashboard = ({ user, showAddCropModal, setShowAddCropModal }) => {
                       ))}
                     </select>
                     {formData.name === 'Other (अन्य / इतर)' && (
-                      <input 
-                        type="text" 
-                        required 
+                      <input
+                        type="text"
+                        required
                         className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all mt-2"
                         placeholder={t('enterCropName')}
                         value={customCropName}
@@ -436,30 +496,30 @@ const Dashboard = ({ user, showAddCropModal, setShowAddCropModal }) => {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-bold text-slate-700 mb-1">{t('startDate')}</label>
-                      <input 
-                        type="date" 
-                        required 
+                      <input
+                        type="date"
+                        required
                         className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
                         value={formData.startDate}
-                        onChange={e => setFormData({...formData, startDate: e.target.value})}
+                        onChange={e => setFormData({ ...formData, startDate: e.target.value })}
                       />
                     </div>
                     <div>
                       <label className="block text-sm font-bold text-slate-700 mb-1">{t('landArea')}</label>
                       <div className="relative">
-                        <input 
-                          type="number" 
+                        <input
+                          type="number"
                           step="0.01"
-                          required 
+                          required
                           className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
                           placeholder="0.00"
                           value={formData.landArea}
-                          onChange={e => setFormData({...formData, landArea: e.target.value})}
+                          onChange={e => setFormData({ ...formData, landArea: e.target.value })}
                         />
-                        <select 
+                        <select
                           className="absolute right-2 top-2 bottom-2 bg-white border border-slate-200 rounded-lg px-2 text-xs font-bold text-slate-600 focus:ring-1 focus:ring-emerald-500 outline-none"
                           value={formData.unit}
-                          onChange={e => setFormData({...formData, unit: e.target.value})}
+                          onChange={e => setFormData({ ...formData, unit: e.target.value })}
                         >
                           <option value="Acre">Acre</option>
                           <option value="Bigha">Bigha</option>
@@ -469,35 +529,35 @@ const Dashboard = ({ user, showAddCropModal, setShowAddCropModal }) => {
                   </div>
                   <div>
                     <label className="block text-sm font-bold text-slate-700 mb-1">{t('locationOptional')}</label>
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
                       placeholder={t('locationOptional')}
                       value={formData.location}
-                      onChange={e => setFormData({...formData, location: e.target.value})}
+                      onChange={e => setFormData({ ...formData, location: e.target.value })}
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-bold text-slate-700 mb-1">{t('notesOptional')}</label>
-                    <textarea 
+                    <textarea
                       className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all resize-none"
                       rows={3}
                       placeholder={t('notesOptional')}
                       value={formData.notes}
-                      onChange={e => setFormData({...formData, notes: e.target.value})}
+                      onChange={e => setFormData({ ...formData, notes: e.target.value })}
                     />
                   </div>
                 </div>
                 <div className="px-6 py-4 bg-slate-50 flex space-x-3 rounded-b-3xl">
-                  <button 
-                    type="button" 
+                  <button
+                    type="button"
                     onClick={() => setShowModal(false)}
                     className="flex-1 py-3 border border-slate-300 rounded-xl font-bold text-slate-600 hover:bg-slate-100 transition-colors"
                   >
                     {t('cancel')}
                   </button>
-                  <button 
-                    type="submit" 
+                  <button
+                    type="submit"
                     className="flex-1 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold shadow-lg shadow-emerald-200 transition-all"
                   >
                     {isEditing ? t('updateCrop') : t('saveCrop')}
