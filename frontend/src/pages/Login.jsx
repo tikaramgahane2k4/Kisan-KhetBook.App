@@ -158,6 +158,7 @@ const Login = ({ onLogin }) => {
               <input
                 type="email"
                 required
+                autoComplete="email"
                 className="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all placeholder:text-slate-400"
                 placeholder="farmer@example.com"
                 value={email}
@@ -167,11 +168,12 @@ const Login = ({ onLogin }) => {
             <div>
               <div className="flex justify-between mb-2">
                 <label className="block text-sm font-bold text-slate-700">{t('password')}</label>
-                <a href="#" className="text-xs font-bold text-emerald-600 hover:text-emerald-700">{t('forgot')}</a>
+                <span className="text-xs font-bold text-emerald-600">{t('forgot')}</span>
               </div>
               <input
                 type="password"
                 required
+                autoComplete="current-password"
                 className="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all placeholder:text-slate-400"
                 placeholder="••••••••"
                 value={password}

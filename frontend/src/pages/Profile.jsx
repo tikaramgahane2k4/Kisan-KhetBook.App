@@ -147,20 +147,6 @@ const Profile = ({ user, onUpdateUser, isOpen, onClose }) => {
     fetchPinDetails();
     // eslint-disable-next-line
   }, [formData.pincode]);
-  <div>
-    <label className="block text-sm font-bold text-slate-700 mb-1.5">Pin Code</label>
-    <input
-      type="text"
-      className="w-full px-4 py-3 border border-slate-200 rounded-xl bg-white focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
-      placeholder="Enter 6-digit PIN code"
-      value={formData.pincode}
-      maxLength={6}
-      onChange={e => setFormData({ ...formData, pincode: e.target.value.replace(/[^0-9]/g, '') })}
-    />
-    {pinLoading && (
-      <span className="text-xs text-emerald-600">Fetching address...</span>
-    )}
-  </div>
 
   const handleCancel = () => {
     setFormData({ ...profileData });

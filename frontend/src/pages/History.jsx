@@ -7,8 +7,6 @@ const History = () => {
   const { t } = useTranslation();
   const [crops, setCrops] = useState([]);
   const [loading, setLoading] = useState(true);
-  // Only show completed crops in history
-  const [filter, setFilter] = useState('completed'); // completed only
 
 
   const fetchCrops = async () => {
@@ -45,7 +43,8 @@ const History = () => {
     if (!window.confirm('Are you sure you want to delete all completed crops?')) return;
     try {
       await cropAPI.deleteAllCrops();
-      setCrops([]);
+      // Re-fetch to reflect actual state (backend deletes all crops)
+      await fetchCrops();
     } catch (err) {
       alert('Failed to delete all history');
     }
@@ -165,8 +164,8 @@ const History = () => {
                       <div className="flex items-center space-x-2 mb-1">
                         <h3 className="text-base font-bold text-slate-800 truncate">{crop.name}</h3>
                         <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${crop.status === 'Active'
-                            ? 'bg-emerald-100 text-emerald-700'
-                            : 'bg-slate-100 text-slate-600'
+                          ? 'bg-emerald-100 text-emerald-700'
+                          : 'bg-slate-100 text-slate-600'
                           }`}>
                           {crop.status === 'Active' ? t('statusActive') : t('statusCompleted')}
                         </span>

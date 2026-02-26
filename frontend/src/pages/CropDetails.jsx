@@ -3,22 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { cropAPI, expenseAPI } from '../services/api';
 import { useTranslation } from '../i18n.jsx';
-
-// Constants for Enums
-export const ExpenseType = {
-  LABOUR: 'Labour',
-  TRACTOR: 'Tractor',
-  THRESHING: 'Paddy Threshing',
-  FERTILIZER: 'Fertilizer',
-  SEEDS: 'Seeds',
-  IRRIGATION: 'Water / Paani',
-  OTHER: 'Other'
-};
-
-export const CropStatus = {
-  ACTIVE: 'Active',
-  COMPLETED: 'Completed'
-};
+import { CropStatus, ExpenseType } from '../constants';
 
 const CropDetails = () => {
   const { id } = useParams();
@@ -27,6 +12,7 @@ const CropDetails = () => {
   const [crop, setCrop] = useState(null);
   const [showExpenseModal, setShowExpenseModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isOfflineMode, setIsOfflineMode] = useState(false);
   const getDefaultExpenseData = () => ({
     type: ExpenseType.LABOUR,
     amount: '',
@@ -102,10 +88,12 @@ const CropDetails = () => {
           const response = await cropAPI.getCropById(id);
           if (response.success) {
             setCrop(response.data);
+            setIsOfflineMode(!!response.offline);
           }
         } catch (err) {
           console.error('Failed to load crop:', err);
-          navigate('/');
+          // Only navigate away if we truly have nothing (not just offline)
+          if (navigator.onLine) navigate('/');
         }
       }
     };
@@ -379,6 +367,15 @@ const CropDetails = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Offline data notice */}
+      {isOfflineMode && (
+        <div className="mb-4 bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3 flex items-center space-x-2 text-amber-700 no-print">
+          <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span className="text-sm font-medium">Offline — showing cached data. Any changes will sync when you reconnect.</span>
+        </div>
+      )}
       {/* Header Info */}
       <div className="mb-8 no-print">
         <Link to="/" className="text-emerald-600 font-bold flex items-center mb-4 hover:underline">
@@ -817,22 +814,6 @@ const CropDetails = () => {
                         let total = time * charge;
                         return isNaN(total) ? 0 : total.toFixed(2);
                       })()}</div>
-                      <div className="mt-4 grid grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-sm font-bold text-slate-700 mb-1">{t('notesOptionalLabel')}</label>
-                          <input type="text" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.notes} onChange={e => setExpenseData({ ...expenseData, notes: e.target.value })} />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-bold text-slate-700 mb-1">{t('paymentMode')}</label>
-                          <select className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" value={expenseData.paymentMode} onChange={e => setExpenseData({ ...expenseData, paymentMode: e.target.value })}>
-                            <option value="">Select</option>
-                            <option value="cash">Cash</option>
-                            <option value="upi">UPI</option>
-                            <option value="bank">Bank Transfer</option>
-                            <option value="other">Other</option>
-                          </select>
-                        </div>
-                      </div>
                     </>
                   )}
                   {expenseData.type === ExpenseType.LABOUR && (

@@ -7,12 +7,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { cropAPI } from '../services/api';
 import { useTranslation } from '../i18n.jsx';
 import CropAdvisory from '../components/CropAdvisory';
-
-// Constants for Enums
-export const CropStatus = {
-  ACTIVE: 'Active',
-  COMPLETED: 'Completed'
-};
+import { CropStatus } from '../constants';
 
 // Common crop names
 const CROP_OPTIONS = [
@@ -43,6 +38,7 @@ const Dashboard = ({ user, showAddCropModal, setShowAddCropModal }) => {
   const [editingCropId, setEditingCropId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [isOfflineMode, setIsOfflineMode] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     startDate: new Date().toISOString().split('T')[0],
@@ -55,44 +51,62 @@ const Dashboard = ({ user, showAddCropModal, setShowAddCropModal }) => {
   const [weather, setWeather] = useState(null);
   const [weatherLoading, setWeatherLoading] = useState(false);
   const [weatherCity, setWeatherCity] = useState('');
-  // Weather fetch using city or pincode
+
+  // Weather fetch — cached in sessionStorage per pincode.
+  // Only hits the API when the pincode changes; uses cached data on remount.
   useEffect(() => {
+    const pincode = user?.pincode;
+    if (!pincode || pincode.length !== 6) {
+      setWeatherCity('');
+      return;
+    }
+
+    const cacheKey = `weather_cache_${pincode}`;
+    const cached = sessionStorage.getItem(cacheKey);
+    if (cached) {
+      // Use cached data instantly — no API call needed
+      try {
+        const { city, data } = JSON.parse(cached);
+        setWeatherCity(city);
+        setWeather(data);
+        return;
+      } catch { /* ignore corrupt cache */ }
+    }
+
+    // Not cached — fetch from API
     const fetchWeather = async () => {
       let city = null;
-      // Always use district from pincode for weather lookup
-      if (user?.pincode && user.pincode.length === 6) {
-        try {
-          const res = await axios.get(`https://api.postalpincode.in/pincode/${user.pincode}`);
-          const data = res.data;
-          if (data[0].Status === 'Success' && data[0].PostOffice && data[0].PostOffice.length > 0) {
-            city = data[0].PostOffice[0].District;
-          }
-        } catch (e) {
-          city = null;
+      try {
+        const res = await axios.get(`https://api.postalpincode.in/pincode/${pincode}`);
+        const d = res.data;
+        if (d[0].Status === 'Success' && d[0].PostOffice?.length > 0) {
+          city = d[0].PostOffice[0].District;
         }
-      }
-      if (city) {
-        setWeatherCity(city);
-        setWeatherLoading(true);
-        getWeatherByCity(city)
-          .then(data => {
-            if (data) {
-              setWeather(data);
-            } else {
-              // Fallback: try removing diacritics and common spelling
-              const fallbackCity = city.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-              getWeatherByCity(fallbackCity || 'Bhandara').then(fallbackData => {
-                setWeather(fallbackData);
-              });
-            }
-          })
-          .finally(() => setWeatherLoading(false));
-      } else {
-        setWeatherCity('');
+      } catch { city = null; }
+
+      if (!city) { setWeatherCity(''); return; }
+
+      setWeatherCity(city);
+      setWeatherLoading(true);
+      try {
+        let data = await getWeatherByCity(city);
+        if (!data) {
+          const fallback = city.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+          data = await getWeatherByCity(fallback || 'Bhandara');
+        }
+        if (data) {
+          setWeather(data);
+          // Cache for the rest of this browser session
+          sessionStorage.setItem(cacheKey, JSON.stringify({ city, data }));
+        }
+      } finally {
+        setWeatherLoading(false);
       }
     };
+
     fetchWeather();
-  }, [user?.pincode]);
+  }, [user?.pincode]); // Only re-runs when pincode actually changes
+
 
   useEffect(() => {
     if (showAddCropModal) {
@@ -128,6 +142,7 @@ const Dashboard = ({ user, showAddCropModal, setShowAddCropModal }) => {
           const response = await cropAPI.getCrops();
           if (response.success) {
             setCrops(response.data);
+            setIsOfflineMode(!!response.offline);
           }
         } catch (err) {
           setError('Failed to load crops');
@@ -183,6 +198,7 @@ const Dashboard = ({ user, showAddCropModal, setShowAddCropModal }) => {
 
   const handleEditCrop = (crop) => {
     setIsEditing(true);
+    setEditingCropId(crop._id || crop.id);
     const cropName = crop.name || '';
     const isInList = CROP_OPTIONS.some(option => option.startsWith(cropName.split(' (')[0]));
 
@@ -199,6 +215,7 @@ const Dashboard = ({ user, showAddCropModal, setShowAddCropModal }) => {
   };
 
   const handleUpdateCrop = async (e) => {
+    e.preventDefault();
     const cropName = formData.name === 'Other (अन्य / इतर)' ? customCropName : formData.name.split(' (')[0];
 
     try {
@@ -261,6 +278,15 @@ const Dashboard = ({ user, showAddCropModal, setShowAddCropModal }) => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Offline data notice */}
+      {isOfflineMode && (
+        <div className="mb-4 bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3 flex items-center space-x-2 text-amber-700">
+          <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span className="text-sm font-medium">Showing cached data — changes will sync when online</span>
+        </div>
+      )}
       {/* Weather Widget */}
       <div className="mb-6">
         {weatherLoading ? (

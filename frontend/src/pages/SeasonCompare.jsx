@@ -74,8 +74,8 @@ const SeasonCompare = () => {
                                 key={name}
                                 onClick={() => setSelectedCropName(name)}
                                 className={`px-6 py-2.5 rounded-full font-bold mr-3 transition-all ${selectedCropName === name
-                                        ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-200'
-                                        : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+                                    ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-200'
+                                    : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
                                     }`}
                             >
                                 {name}
@@ -140,7 +140,7 @@ const SeasonCompare = () => {
                                         </div>
                                         <div className="bg-slate-50/50 p-4 rounded-2xl border border-slate-100">
                                             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">ROI</p>
-                                            <p className="text-lg font-bold text-blue-700 font-outfit">{((profit / totalExpense) * 100).toFixed(1)}%</p>
+                                            <p className="text-lg font-bold text-blue-700 font-outfit">{totalExpense > 0 ? `${((profit / totalExpense) * 100).toFixed(1)}%` : 'N/A'}</p>
                                         </div>
                                     </div>
                                 </div>

@@ -1,1 +1,15 @@
-/* Tailwind is loaded via CDN in index.html */
+/* Tailwind is loaded via CDN in index.html.
+   This file contains only custom, non-Tailwind CSS. */
+
+/* ─── Main content bottom padding (mobile nav + iOS safe area) ─── */
+/* On mobile: reserve space for the fixed 64px nav + iPhone home indicator */
+.main-content {
+    padding-bottom: calc(4rem + env(safe-area-inset-bottom, 0px));
+}
+
+/* On tablet/desktop: no bottom padding needed */
+@media (min-width: 768px) {
+    .main-content {
+        padding-bottom: 0;
+    }
+}

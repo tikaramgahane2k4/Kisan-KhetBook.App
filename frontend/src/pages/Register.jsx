@@ -169,6 +169,7 @@ const Register = ({ onLogin }) => {
               <input
                 type="text"
                 required
+                autoComplete="name"
                 className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all placeholder:text-slate-400 text-sm"
                 placeholder="John Doe"
                 value={formData.name}
@@ -180,6 +181,7 @@ const Register = ({ onLogin }) => {
               <input
                 type="email"
                 required
+                autoComplete="email"
                 className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all placeholder:text-slate-400 text-sm"
                 placeholder="farmer@example.com"
                 value={formData.email}
@@ -192,6 +194,7 @@ const Register = ({ onLogin }) => {
                 <input
                   type="password"
                   required
+                  autoComplete="new-password"
                   className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all placeholder:text-slate-400 text-sm"
                   placeholder="••••••••"
                   value={formData.password}
@@ -203,6 +206,7 @@ const Register = ({ onLogin }) => {
                 <input
                   type="password"
                   required
+                  autoComplete="new-password"
                   className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all placeholder:text-slate-400 text-sm"
                   placeholder="••••••••"
                   value={formData.confirmPassword}

@@ -3,29 +3,215 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" type="image/png" href="/logo.png" />
+  <!-- viewport-fit=cover is required for iOS safe-area-inset to work on notched iPhones -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+  <!-- SEO & Identity -->
   <title>KhetBook - Smart Farming</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <meta name="description"
+    content="KhetBook — Track crop expenses, sales and profits. Kisan Ka Sathi for smart farming." />
+  <meta name="keywords" content="kisan, farmer, crop, expense, khetbook, farming, agriculture" />
+  <meta name="author" content="KhetBook" />
+
+  <!-- PWA / App feel -->
+  <meta name="theme-color" content="#059669" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="KhetBook" />
+  <meta name="application-name" content="KhetBook" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/logo.png" />
+  <link rel="apple-touch-icon" href="/logo.png" />
+
+  <!-- Preconnect for faster font + Google loading -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://accounts.google.com" />
+
+  <!-- Google Fonts -->
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap"
     rel="stylesheet">
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Sign-In SDK -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+
   <style>
+    /* ============================================================
+       BASE RESET & CROSS-PLATFORM SMOOTHNESS
+    ============================================================ */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      /* Use dvh (dynamic viewport height) where supported — fixes iOS Safari address-bar bug.
+         Falls back to 100vh on unsupported browsers. */
+      height: -webkit-fill-available;
+      height: 100dvh;
+      scroll-behavior: smooth;
+    }
+
     body {
-      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      /* Modern: use dvh to account for mobile browser chrome */
+      min-height: 100dvh;
+      min-height: -webkit-fill-available;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       background-color: #f8fafc;
       -webkit-tap-highlight-color: transparent;
+      /* Prevent double-tap zoom on interactive elements */
       touch-action: manipulation;
+      /* Prevent rubber-band overscroll at body level */
       overscroll-behavior: none;
+      /* Smooth text rendering across all platforms */
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
     }
 
-    * {
-      -webkit-tap-highlight-color: transparent;
+    #root {
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
     }
 
+    /* ============================================================
+       FONT HELPERS
+    ============================================================ */
     .font-outfit {
-      font-family: 'Outfit', sans-serif;
+      font-family: 'Outfit', 'Inter', sans-serif;
+    }
+
+    /* ============================================================
+       iOS INPUT ZOOM FIX
+       Any input/select/textarea with font-size < 16px causes
+       iOS Safari to auto-zoom in. Force 16px minimum.
+    ============================================================ */
+    input,
+    select,
+    textarea {
+      font-size: 16px !important;
+    }
+
+    @media (min-width: 640px) {
+
+      /* On larger screens, allow CSS font-size to come through normally */
+      input,
+      select,
+      textarea {
+        font-size: inherit !important;
+      }
+    }
+
+    /* ============================================================
+       iOS SCROLL MOMENTUM — makes scrollable containers feel native
+    ============================================================ */
+    .overflow-y-auto,
+    .overflow-x-auto,
+    .overflow-auto {
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* ============================================================
+       SAFE AREA — MobileNav bottom bar and page content padding
+    ============================================================ */
+    .safe-bottom {
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    .safe-area-mobile-nav {
+      /* The 64px fixed nav + iPhone home indicator gap */
+      padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+    }
+
+    /* ============================================================
+       HARDWARE-ACCELERATED ANIMATIONS
+       Use transform instead of layout-triggering properties
+    ============================================================ */
+    .transition-all {
+      will-change: auto;
+    }
+
+    /* Spinner animation — GPU accelerated */
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .animate-spin {
+      animation: spin 0.7s linear infinite;
+      will-change: transform;
+    }
+
+    /* Slide up for modals — GPU accelerated with transform */
+    @keyframes slideUp {
+      from {
+        transform: translateY(100%);
+        opacity: 0.5;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideDown {
+      from {
+        transform: translateY(-100%);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    /* ============================================================
+       SCROLLBAR HIDE — cross-browser
+    ============================================================ */
+    .scrollbar-hide {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    .scrollbar-hide::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* ============================================================
+       FOCUS VISIBLE — accessibility-friendly focus styles
+    ============================================================ */
+    :focus-visible {
+      outline: 2px solid #059669;
+      outline-offset: 2px;
+    }
+
+    :focus:not(:focus-visible) {
+      outline: none;
+    }
+
+    /* ============================================================
+       PRINT STYLES
+    ============================================================ */
+    .print-only {
+      display: none;
     }
 
     @media print {
@@ -84,12 +270,7 @@
         margin-top: 0.75rem !important;
       }
     }
-
-    .print-only {
-      display: none;
-    }
   </style>
-
 </head>
 
 <body>
