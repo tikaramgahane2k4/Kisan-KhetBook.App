@@ -18,6 +18,9 @@ connectDB();
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5173',
+  // LAN IP for mobile device testing on the same WiFi
+  'http://192.168.0.104:3000',
+  'http://192.168.0.104:5173',
   'https://khetbookapp.vercel.app',
   'https://kisan-sathi-app.vercel.app',
   'https://kisan-sathi-app-1cd6.vercel.app',
@@ -68,8 +71,8 @@ app.get('/api/health', (req, res) => {
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ 
-    success: false, 
+  res.status(500).json({
+    success: false,
     message: 'Something went wrong!',
     error: process.env.NODE_ENV === 'development' ? err.message : undefined
   });

@@ -52,60 +52,102 @@ const Dashboard = ({ user, showAddCropModal, setShowAddCropModal }) => {
   const [weatherLoading, setWeatherLoading] = useState(false);
   const [weatherCity, setWeatherCity] = useState('');
 
-  // Weather fetch — cached in sessionStorage per pincode.
-  // Only hits the API when the pincode changes; uses cached data on remount.
+  // Weather fetch — cached in localStorage per pincode with 30-min TTL.
+  // sessionStorage was wiped on mobile when tabs went to background; localStorage persists.
   useEffect(() => {
     const pincode = user?.pincode;
-    if (!pincode || pincode.length !== 6) {
+
+    // Build a stable city hint from the user profile as an instant fallback
+    // in case the postal-pincode API is slow or blocked on mobile networks.
+    const profileCity = user?.city || user?.state || null;
+
+    const hasPincode = pincode && pincode.length === 6;
+
+    if (!hasPincode && !profileCity) {
       setWeatherCity('');
       return;
     }
 
-    const cacheKey = `weather_cache_${pincode}`;
-    const cached = sessionStorage.getItem(cacheKey);
-    if (cached) {
-      // Use cached data instantly — no API call needed
+    // ── Check localStorage cache (30-min TTL) ──────────────────────
+    if (hasPincode) {
+      const cacheKey = `weather_cache_${pincode}`;
       try {
-        const { city, data } = JSON.parse(cached);
-        setWeatherCity(city);
-        setWeather(data);
-        return;
-      } catch { /* ignore corrupt cache */ }
+        const raw = localStorage.getItem(cacheKey);
+        if (raw) {
+          const { city, data, ts } = JSON.parse(raw);
+          const AGE_MS = 30 * 60 * 1000; // 30 minutes
+          if (Date.now() - ts < AGE_MS) {
+            setWeatherCity(city);
+            setWeather(data);
+            return; // fresh cache — no API call needed
+          }
+          // stale — fall through to refetch
+        }
+      } catch { /* corrupt cache – ignore */ }
     }
 
-    // Not cached — fetch from API
+    // ── Fetch fresh weather ────────────────────────────────────────
     const fetchWeather = async () => {
+      setWeatherLoading(true);
       let city = null;
-      try {
-        const res = await axios.get(`https://api.postalpincode.in/pincode/${pincode}`);
-        const d = res.data;
-        if (d[0].Status === 'Success' && d[0].PostOffice?.length > 0) {
-          city = d[0].PostOffice[0].District;
-        }
-      } catch { city = null; }
 
-      if (!city) { setWeatherCity(''); return; }
+      // Try to resolve city from pincode (with a strict 5-second timeout
+      // so slow/blocked mobile networks don't hang indefinitely)
+      if (hasPincode) {
+        try {
+          const controller = new AbortController();
+          const tid = setTimeout(() => controller.abort(), 5000);
+          const res = await axios.get(
+            `https://api.postalpincode.in/pincode/${pincode}`,
+            { signal: controller.signal, timeout: 5000 }
+          );
+          clearTimeout(tid);
+          const d = res.data;
+          if (d?.[0]?.Status === 'Success' && d[0].PostOffice?.length > 0) {
+            city = d[0].PostOffice[0].District;
+          }
+        } catch { /* timeout or network error on mobile — use profile fallback */ }
+      }
+
+      // If pincode lookup failed or was skipped, use profile city as fallback
+      if (!city) city = profileCity;
+
+      if (!city) {
+        setWeatherCity('');
+        setWeatherLoading(false);
+        return;
+      }
 
       setWeatherCity(city);
-      setWeatherLoading(true);
+
       try {
         let data = await getWeatherByCity(city);
         if (!data) {
-          const fallback = city.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-          data = await getWeatherByCity(fallback || 'Bhandara');
+          // Try stripping diacritics (e.g. Hindi/Marathi district names)
+          const ascii = city.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+          if (ascii !== city) data = await getWeatherByCity(ascii);
         }
         if (data) {
           setWeather(data);
-          // Cache for the rest of this browser session
-          sessionStorage.setItem(cacheKey, JSON.stringify({ city, data }));
+          // Persist in localStorage with timestamp for 30-min TTL
+          if (hasPincode) {
+            try {
+              localStorage.setItem(
+                `weather_cache_${pincode}`,
+                JSON.stringify({ city, data, ts: Date.now() })
+              );
+            } catch { /* localStorage quota exceeded — ignore */ }
+          }
         }
-      } finally {
+      } catch { /* weather API error — widget will show unavailable */ }
+      finally {
         setWeatherLoading(false);
       }
     };
 
     fetchWeather();
-  }, [user?.pincode]); // Only re-runs when pincode actually changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.pincode, user?.city, user?.state]); // re-run if pincode or profile city changes
 
 
   useEffect(() => {
